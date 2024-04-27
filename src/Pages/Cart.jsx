@@ -3,26 +3,86 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCheckCircle } from "react-icons/fa";
 import "./style.css";
-import { calculateTotal, removeFromCart, resetCart } from "../features/dstepSlice";
+import { calculateTotal, resetCart, setCart } from "../features/dstepSlice";
 import Model from "../components/model/Model";
+import { db } from "../auth/Firebase";
+import { collection, getDocs, updateDoc, where } from "firebase/firestore";
+import { query } from "firebase/database";
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const totalPrice = useSelector((state) => state.totalAmount);
+  const loading = useSelector((state) => state.isLoading);
   const dispatch = useDispatch();
   const [change, setChange] = useState(0);
   const [showModel, setShowModel] = useState(false);
-  const [address, setAddress] = useState("")
-  const [phone, setPhone] = useState("")
-  const [pincode, setPincode] = useState("")
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [pincode, setPincode] = useState("");
   const [showTick, setShowTick] = useState(false);
+  // const collectionRef = db.collection("cart");
+  const dbRef = collection(db, "cart");
+  const cartData=useSelector(state=>state.cart)
+  const fetchCart = async () => {
+    try {
+      let q = query(
+        dbRef,
+        where("owner", "==", sessionStorage.getItem("user"))
+      );
+      const data = await getDocs(q);
+      const documents = [];
+      data.forEach((doc) => {
+        documents.push(doc.data());
+      });
+      dispatch(setCart(documents));
+      console.log("cart updated", cartData);
+    } catch (error) {
+      console.log("error at fetching cart in cart page", error);
+    }
+  };
+  const handleRemove = async (id) => {
+    try {
+      const q = query(
+        collection(db, "cart"),
+        where("owner", "==", sessionStorage.getItem("user"),where("id","==", id))
+      );
+      const querySnapshot = await getDocs(q);
 
-  const handleConfirm = () => {
-    if (address.trim()==="" || phone.trim()==="" || pincode.trim()==="") {
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.get("id"));
+       if (doc.get("id")===id) {
+        updateDoc(doc.ref, {
+          owner:"owner@gmail.com",
+        });
+       } 
+      });
+      fetchCart()
+    } catch (error) {
+      console.log("error at fetching cart in product page", error);
+    }
+  };
+  const handleConfirm = async() => {
+    if (address.trim() === "" || phone.trim() === "" || pincode.trim() === "") {
       alert("All fields are required");
       return null;
     }
     setShowTick(true);
-    dispatch(resetCart());
+    try {
+      const q = query(
+        collection(db, "cart"),
+        where("owner", "==", sessionStorage.getItem("user"),where("id","==", id))
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+     
+        updateDoc(doc.ref, {
+          owner:"owner@gmail.com",
+        });
+      });
+      fetchCart()
+    } catch (error) {
+      console.log("error at fetching cart in product page", error);
+    }
   };
   const handleProceed = () => {
     if (cart.length === 0) {
@@ -37,7 +97,11 @@ const Cart = () => {
   };
   useEffect(() => {
     dispatch(calculateTotal());
-  }, [change,showTick]);
+  }, [change, showTick, loading]);
+
+  if (loading) {
+    return <div>Loading....</div>;
+  }
   return (
     <Fragment>
       <div className="relative w-full px-[120px] mt-1 ">
@@ -67,17 +131,14 @@ const Cart = () => {
                     </div>
                     <div className="col-span-2">
                       <div className="w-full h-full flex flex-col justify-center">
-                        <li>Product: {item.name}</li>
-                        <li>From: {item.owner}</li>
-                        <li>Category: {item.category}</li>
-                        <li>Price: {item.price}</li>
+                        <li>Product: {item?.name}</li>
+                        <li>From: {item?.resname}</li>
+                        <li>Quantity: {item?.quantity}</li>
+                        <li>Price: {item?.price}</li>
                         <div className="mt-4 w-full justify-start">
                           <button
                             className="px-3 py-[2px] border border-gray-600 rounded-full shadow-xl"
-                            onClick={() => {
-                              dispatch(removeFromCart(item.cartid));
-                              setChange(Math.random());
-                            }}
+                            onClick={() => handleRemove(item?.id)}
                           >
                             Remove
                           </button>
@@ -99,8 +160,8 @@ const Cart = () => {
               {cart &&
                 cart.map((item, index) => (
                   <div key={index} className="flex w-full justify-between pr-8">
-                    <div>{item.name}</div>
-                    <div>₹{item.price}</div>
+                    <div>{item?.name}</div>
+                    <div>₹{item?.price * item.quantity}</div>
                   </div>
                 ))}
             </div>
@@ -117,7 +178,16 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <Model isvisible={showModel} onClose={() => {setShowModel(false);setAddress("");setPhone("");setPincode("");setShowTick(false)}}>
+      <Model
+        isvisible={showModel}
+        onClose={() => {
+          setShowModel(false);
+          setAddress("");
+          setPhone("");
+          setPincode("");
+          setShowTick(false);
+        }}
+      >
         {!showTick ? (
           <div className="p-6 flex flex-col">
             <div className="text-anju font-lexend text-2xl flex justify-center mb-6">
@@ -127,18 +197,21 @@ const Cart = () => {
               <div>Phone :</div>
               <div className="ml-3 w-72 h-10 flex justify-center overflow-hidden border-2 rounded-lg border-anju">
                 <input
-                  type="text"
+                  type="number"
+                  value={phone}
                   className="outline-none border-none pl-2 w-full"
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) =>
+                    phone.length <= 10 && setPhone(e.target.value)
+                  }
                 />
               </div>
             </div>
             <div className="flex flex-row justify-center mb-5">
               <div>Address :</div>
               <div className="ml-3 w-72 h-32 flex justify-start items-start overflow-hidden border-2 rounded-lg border-anju">
-                <input
-                  type="text"
-                  className="outline-none border-none pl-2 w-full"
+                <textarea
+                  value={address}
+                  className="outline-none border-none pl-2 w-full h-full"
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
@@ -147,9 +220,12 @@ const Cart = () => {
               <div>Pincode :</div>
               <div className="ml-3 w-72 h-10 flex justify-center overflow-hidden border-2 rounded-lg border-anju">
                 <input
-                  type="text"
+                  type="number"
+                  value={pincode}
                   className="outline-none border-none pl-2 w-full"
-                  onChange={(e) => setPincode(e.target.value)}
+                  onChange={(e) =>
+                    pincode.length <= 6 && setPincode(e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -169,7 +245,7 @@ const Cart = () => {
               <div className="text-anju">DEPORT</div>
             </div>
             <div className="mb-10 w-20 h-20 rounded-full bg-anju text-white flex justify-center items-center">
-              <FaCheckCircle size={60}/>
+              <FaCheckCircle size={60} />
             </div>
             <div className="flex font-mono text-4xl">
               <div className="text-anju">"</div>

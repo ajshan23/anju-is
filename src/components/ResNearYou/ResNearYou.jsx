@@ -4,7 +4,7 @@ import ResCard from '../resCard/ResCard'
 const ResNearYou = () => {
   return (
     <div className="w-full px-[120px] flex flex-col">
-    <div className="text-3xl font-bold mb-4">Restaurent's near you</div>
+    <div className="text-3xl font-bold mb-4">Restaurant's near you</div>
     <div className="text-lg font-medium mb-9">
       Find the best food from the best spot in your location
     </div>

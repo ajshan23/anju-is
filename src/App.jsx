@@ -6,7 +6,7 @@ import Footer from "./components/Footer/Footer";
 
 const App = () => {
   const location=useLocation()
-  console.log(location.pathname);
+  // console.log(location.pathname);
   return (
     <div>
       {location.pathname==="/login"||location.pathname==="/signup" ?<></>:<Navbar />}

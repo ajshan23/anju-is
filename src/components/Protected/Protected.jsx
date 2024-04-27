@@ -10,6 +10,7 @@ const Protected = () => {
   const token=useSelector(state=>state.accessToken)
   return (
     token!==""?<Outlet/> :<Navigate to="/login"/>
+  
   )
 }
 

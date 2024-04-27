@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Card = ({data}) => {
   return (
-    <Link to={`/product/${data.id}`}>
+    <Link to={`/product/${data.category}/${data.id}`}>
     <div className="h-[350px] w-[256px] flex flex-col ">
       <img
         src={data.image}
@@ -14,7 +14,7 @@ const Card = ({data}) => {
       />
       <div className="pt-3 w-full flex justify-between items-center px-1">
         <div className="font-bold text-lg">{data.name}</div>
-        <div className="w-10  rounded-full bg-[#14AD36] text-white flex justify-around items-center">
+        <div className="w-12  rounded-full bg-[#14AD36] text-white flex justify-around items-center">
           <div className="pl-2">
             <FaStar size={10} />
           </div>

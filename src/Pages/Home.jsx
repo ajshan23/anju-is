@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
 import Hero from "../components/hero/Hero";
-import foodpic from "../assets/foodpic.jpg";
 import TopPicks from "../components/TopPicks/TopPicks";
 import ResNearYou from "../components/ResNearYou/ResNearYou";
-import {foods,grocery,medicine} from "../features/productData"
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const Home = () => {
   const auth=useSelector(state=>state.accessToken)
   const navigate=useNavigate()
+  const data=useSelector(state=>state.item)
   useEffect(()=>{
     if(!auth){
       navigate('/login')
@@ -57,16 +56,16 @@ const Home = () => {
         </div>
       </div>
       <div className="mb-24">
-      <TopPicks data={foods.slice(0,4)} title="Top Picks" desc="Find the popular dishes from best restaurents near you"/>
+     {data && <TopPicks data={data?.slice(0,4)} title="Top Picks" desc="Find the popular dishes from best restaurents near you"/>}
       </div>
       <div className="mb-24">
-      <TopPicks data={foods.slice(-4)} title="Popular Dishes" desc="Find the popular dishes from the best restaurent near you"/>
+      {data && <TopPicks data={data?.slice(-4)} title="Popular Dishes" desc="Find the popular dishes from the best restaurent near you"/>}
       </div>
       <div className="mb-24">
         <ResNearYou />
       </div>
       <div className="mb-24">
-      <TopPicks data={foods.slice(2,6)} title="Now on Trending" desc="Find the popular dishes from the best restaurent near you"/>
+      {data && <TopPicks data={data?.slice(2,6)} title="Now on Trending" desc="Find the popular dishes from the best restaurent near you"/>}
       </div>
     </div>
   );

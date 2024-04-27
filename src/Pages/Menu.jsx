@@ -3,13 +3,56 @@ import TopPicks from "../components/TopPicks/TopPicks";
 import foodpic1 from "../assets/foodpic.jpg";
 import grocery1 from "../assets/grocery.jpg";
 import medicine1 from "../assets/medicine.jpg";
-import { foods, grocery, medicine } from "../features/productData";
+import {  grocery, medicine } from "../features/productData";
+
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { setGrocery, setMeds } from "../features/dstepSlice";
+import { db } from "../auth/Firebase";
+
 const Menu = () => {
+  const foods=useSelector(state=>state.item.filter((one)=>one.category==="food"))
+  const place=useSelector(state=>state.place)
+  const medicine=useSelector(state=>state.meds)
+  const grocery=useSelector(state=>state.grocery)
+  const dispatch=useDispatch()
+// console.log(foods);
+
+ const findMeds=async()=>{
+  try {
+    let q=query(collection(db, "items"),where("category","==","medicine"))
+   const data= await getDocs(q)
+   const documents = [];
+   data.forEach((doc) => {
+     documents.push(doc.data());
+   });
+   console.log(documents);
+   dispatch(setMeds(documents))
+  } catch (error) {
+    console.log(error);
+  }
+ }
+ const findGrocery=async()=>{
+  try {
+    let q=query(collection(db, "items"),where("category","==","grocery"))
+   const data= await getDocs(q)
+   const documents = [];
+   data.forEach((doc) => {
+     documents.push(doc.data());
+   });
+   console.log(documents);
+   dispatch(setGrocery(documents))
+  } catch (error) {
+    console.log(error);
+  }
+ }
   useEffect(()=>{
     if(!sessionStorage.getItem("token")){
       navigate('/login')
     }
+    findMeds()
+    findGrocery()
   },[])
   return (
     <div className="mb-10">
