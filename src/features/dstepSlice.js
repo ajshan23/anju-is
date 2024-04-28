@@ -8,6 +8,7 @@ const initialstate={
     place:"all",
     meds:[],
     grocery:[],
+    food:[],
     isLoading:false,
     
     
@@ -51,6 +52,9 @@ export const ecomSlice=createSlice({
         setGrocery:(state,action)=>{
             state.grocery=action.payload;
         },
+        setFood:(state,action)=>{
+            state.food=action.payload;
+        },
         setLoading:(state,action)=>{
             state.isLoading=action.payload;
         }
@@ -58,6 +62,6 @@ export const ecomSlice=createSlice({
     }
 })
 
-export const {removeFromCart,setCart,updateAccessToken,calculateTotal,resetCart,setItems,setPlacein,setMeds,setGrocery,setLoading}=ecomSlice.actions
+export const {removeFromCart,setCart,updateAccessToken,calculateTotal,resetCart,setItems,setPlacein,setMeds,setGrocery,setLoading,setFood}=ecomSlice.actions
 
 export default ecomSlice.reducer;

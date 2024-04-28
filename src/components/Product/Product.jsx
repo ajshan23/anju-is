@@ -111,7 +111,7 @@ const Product = () => {
         role="alert"
       >
         <strong className="font-bold">Your item:</strong>
-        <span className="block sm:inline">&nbsp;{product.name} Added to cart</span>
+        <span className="block sm:inline">&nbsp;{product[0]?.name} Added to cart</span>
         <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
           <svg
             className="fill-current h-6 w-6 text-anju"

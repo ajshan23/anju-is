@@ -2,8 +2,10 @@ import paragon from "../../assets/paragon.png";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import fivestar from "../../assets/5star.png"
-const ResCard = ({title,image}) => {
+import { Link } from "react-router-dom";
+const ResCard = ({title,image,param}) => {
   return (
+    <Link to={`/restaurant/${param}`}>
     <div className="h-[350px] w-[256px] flex flex-col ">
       <img
         src={image}
@@ -26,6 +28,7 @@ const ResCard = ({title,image}) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

@@ -1,16 +1,54 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaSortAmountDownAlt } from "react-icons/fa";
 import { CiStar } from "react-icons/ci";
 import Card from '../components/SingleCard/Card';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFood, setGrocery, setMeds } from '../features/dstepSlice';
+import { query } from 'firebase/database';
+import { collection, getDocs, where } from 'firebase/firestore';
+import { db } from '../auth/Firebase';
+import { useParams } from 'react-router-dom';
 
-const Category = ({title,data}) => {
-  const [show,setShow]=useState(data)
-  console.log(data);
+const Category = ({section}) => {
+
+  const dispatch=useDispatch()
+  const title=useParams()
+  console.log(title.categoryName);
+  const [data,setData]=useState()
+  console.log("data",data);
+ 
+  const fetchData=async()=>{
+    try {
+      let q=query(collection(db, "items"),where("category","==",title.categoryName))
+     const data= await getDocs(q)
+     const documents = [];
+     data.forEach((doc) => {
+       documents.push(doc.data());
+     });
+     console.log(documents);
+    //  dispatch(setItems(documents))
+   setData(documents)
+    
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  useEffect(()=>{
+      fetchData()
+      
+  },[])
+  if (!data) {
+    return (
+      <div>Loading...</div>
+    )
+  }
   return (
     <div className='w-full px-[120px] my-12 '>
       <div className='w-full flex flex-col shadow-lg'>
             <div className=' w-full text-5xl text-anju font-bold flex justify-center items-center my-4'>
-                {title}
+                {title.categoryName}
             </div>
             <div className='w-full flex justify-center items-center text-slate-500 mb-4'>
                 Quality products at your DoorStep
@@ -34,13 +72,14 @@ const Category = ({title,data}) => {
             </div>
       </div>
       <div className='ml-20 mt-10 grid gap-y-10 grid-cols-4'>
-        {show && show.map((item,index)=>(
+        {data && data.map((item,index)=>(
           <div key={index}>
             <Card data={item} />
           </div>
         ))}
       </div>
     </div>
+    // <div></div>
   )
 }
 

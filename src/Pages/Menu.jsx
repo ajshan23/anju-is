@@ -61,7 +61,7 @@ const Menu = () => {
           <div className="my-12 text-5xl font-bold">Category</div>
 
           <div className="grid grid-cols-7">
-            <Link to="/food">
+            <Link to="/category/food">
               <div className="flex flex-col justify-center items-center">
                 <img
                   src={foodpic1}
@@ -71,7 +71,7 @@ const Menu = () => {
                 <div>Food</div>
               </div>
             </Link>
-            <Link to="/grocery">
+            <Link to="/category/grocery">
               <div className="flex flex-col justify-center items-center">
                 <img
                   src={grocery1}
@@ -81,7 +81,7 @@ const Menu = () => {
                 <div>Groceries</div>
               </div>
             </Link>
-            <Link to="/medicine">
+            <Link to="/category/medicine">
               <div className="flex flex-col justify-center items-center">
                 <img
                   src={medicine1}

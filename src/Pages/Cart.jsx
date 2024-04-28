@@ -69,7 +69,7 @@ const Cart = () => {
     try {
       const q = query(
         collection(db, "cart"),
-        where("owner", "==", sessionStorage.getItem("user"),where("id","==", id))
+        where("owner", "==", sessionStorage.getItem("user"))
       );
       const querySnapshot = await getDocs(q);
 
@@ -201,7 +201,7 @@ const Cart = () => {
                   value={phone}
                   className="outline-none border-none pl-2 w-full"
                   onChange={(e) =>
-                    phone.length <= 10 && setPhone(e.target.value)
+                    phone.length < 10 && setPhone(e.target.value)
                   }
                 />
               </div>
@@ -224,7 +224,7 @@ const Cart = () => {
                   value={pincode}
                   className="outline-none border-none pl-2 w-full"
                   onChange={(e) =>
-                    pincode.length <= 6 && setPincode(e.target.value)
+                    pincode.length < 6 && setPincode(e.target.value)
                   }
                 />
               </div>
