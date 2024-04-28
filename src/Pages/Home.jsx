@@ -9,6 +9,9 @@ const Home = () => {
   const navigate=useNavigate()
   const data=useSelector(state=>state.item)
   useEffect(()=>{
+    if (!sessionStorage.getItem("user")) {
+      navigate("/login")
+    }
     if(!auth){
       navigate('/login')
     }
@@ -16,7 +19,7 @@ const Home = () => {
   return (
     <div>
       <Hero />
-      <div className="px-[120px]  w-full mb-24">
+      <div className="px-[120px]  w-full mb-24" id="purchase">
         <div className="w-full flex flex-col">
           <div className="mb-4 text-3xl font-bold">Featured product's</div>
           <div className="mb-16 text-xl text-slate-600">

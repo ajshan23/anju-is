@@ -7,11 +7,12 @@ import { setFood, setGrocery, setMeds } from '../features/dstepSlice';
 import { query } from 'firebase/database';
 import { collection, getDocs, where } from 'firebase/firestore';
 import { db } from '../auth/Firebase';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Category = ({section}) => {
 
-  const dispatch=useDispatch()
+  const navigate=useNavigate()
+
   const title=useParams()
   console.log(title.categoryName);
   const [data,setData]=useState()
@@ -36,6 +37,9 @@ const Category = ({section}) => {
 
 
   useEffect(()=>{
+    if (!sessionStorage.getItem("user")) {
+      navigate("/login")
+    }
       fetchData()
       
   },[])

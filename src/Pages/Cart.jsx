@@ -8,6 +8,7 @@ import Model from "../components/model/Model";
 import { db } from "../auth/Firebase";
 import { collection, getDocs, updateDoc, where } from "firebase/firestore";
 import { query } from "firebase/database";
+import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const totalPrice = useSelector((state) => state.totalAmount);
@@ -22,6 +23,7 @@ const Cart = () => {
   // const collectionRef = db.collection("cart");
   const dbRef = collection(db, "cart");
   const cartData=useSelector(state=>state.cart)
+  const navigate=useNavigate()
   const fetchCart = async () => {
     try {
       let q = query(
@@ -96,6 +98,9 @@ const Cart = () => {
     setShowModel(true);
   };
   useEffect(() => {
+    if (!sessionStorage.getItem("user")) {
+      navigate("/login")
+    }
     dispatch(calculateTotal());
   }, [change, showTick, loading]);
 

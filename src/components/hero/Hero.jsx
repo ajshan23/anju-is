@@ -3,6 +3,7 @@ import { MdDeliveryDining } from "react-icons/md";
 import { IoFastFood } from "react-icons/io5";
 import img1 from "../../assets/img1.png";
 import img2 from "../../assets/img2.png";
+
 const Hero = () => {
   return (
     <div className="w-full my-16 px-[120px] font-lexend">

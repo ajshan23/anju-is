@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoMdStar } from "react-icons/io";
 import { CiShare2 } from "react-icons/ci";
 import TopPicks from "../TopPicks/TopPicks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "../../features/dstepSlice";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
@@ -13,6 +13,7 @@ const Product = () => {
   const [product,setProduct] = useState([])
   const [relatedProduct,setRelatedProduct] = useState([])
   const { categoryType,productId } = useParams();
+  const navigate=useNavigate()
   // console.log(productId);
   // console.log(categoryType);
 
@@ -92,6 +93,9 @@ const Product = () => {
   }
 
   useEffect(()=>{
+    if (!sessionStorage.getItem("user")) {
+      navigate("/login")
+    }
     fetchData()
     fetchRelated()
     

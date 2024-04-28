@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
 import { IoBagHandle } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { HashLink as Linkh } from "react-router-hash-link";
 import {query,getDocs, collection, where} from "firebase/firestore"
 import {db} from "../../auth/Firebase"
@@ -13,6 +13,8 @@ const Navbar = () => {
   const [place, setPlace] = useState("Kakkanad");
   const dbRef = collection(db, "cart");
   const dispatch=useDispatch()
+  const location=useLocation()
+  console.log(location);
  
 
   const fetchPlace=async()=>{
@@ -64,6 +66,11 @@ const Navbar = () => {
     }
   }
 
+  const handleLogout=(()=>{
+    sessionStorage.clear()
+    window.location.reload()
+  })
+
   useEffect(()=>{
    console.log(place);
    dispatch(setPlacein(place))
@@ -89,14 +96,16 @@ const Navbar = () => {
         </div>
         <div className="flex flex-row gap-[118px] justify-center items-center">
           <div className="flex gap-[28px]  text-sm font-light">
-            <div>
-              <select name="" id="" value={place} onChange={(e)=>setPlace(e.target.value)} className="outline-none text-anju">
-                <option value="all">Eranankulam</option>
-                <option value="Kakkanad">Kakkanad</option>
-                <option value="kaloor">Kaloor</option>
-                {/* <option value="edapally">Edapally</option> */}
-              </select>
-            </div>
+           {
+            location.pathname==="/" &&  <div>
+            <select name="" id="" value={place} onChange={(e)=>setPlace(e.target.value)} className="outline-none text-anju">
+              <option value="all">Eranankulam</option>
+              <option value="Kakkanad">Kakkanad</option>
+              <option value="kaloor">Kaloor</option>
+              {/* <option value="edapally">Edapally</option> */}
+            </select>
+          </div>
+           }
             <div
               className={`group hover:text-anju ${
                 menu === "home" ? "text-anju" : ""
@@ -117,12 +126,12 @@ const Navbar = () => {
                 Menu
               </Link>
             </div>
-            <div
+            {/* <div
               className={`group hover:text-anju `}
               onClick={() => setMenu("about")}
             >
               About
-            </div>
+            </div> */}
             <div className={`group hover:text-anju `}>
               <Linkh to="#contact" style={{ textDecoration: "none" }} smooth>
                 Contact
@@ -130,7 +139,7 @@ const Navbar = () => {
             </div>
             <div className="group hover:text-[#F01F26]">ENG</div>
           </div>
-          <div className="flex gap-[28px]">
+          <div className="flex gap-[28px] justify-center items-center">
             <div>
               <FaHeart size={20} color="#FF843F" />
             </div>
@@ -145,7 +154,7 @@ const Navbar = () => {
             </Link>
 
             <div>
-              <FaUser size={20} color="#FF843F" />
+              <button className="px-3 py-1 border-2 border-anju rounded-full" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
