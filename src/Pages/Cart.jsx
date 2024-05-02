@@ -81,7 +81,7 @@ const Cart = () => {
           owner:"owner@gmail.com",
         });
       });
-      fetchCart()
+      await fetchCart()
     } catch (error) {
       console.log("error at fetching cart in product page", error);
     }
@@ -102,7 +102,7 @@ const Cart = () => {
       navigate("/login")
     }
     dispatch(calculateTotal());
-  }, [change, showTick, loading]);
+  }, [change, showTick, loading,handleConfirm]);
 
   if (loading) {
     return <div>Loading....</div>;

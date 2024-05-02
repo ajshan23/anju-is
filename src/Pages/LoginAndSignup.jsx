@@ -29,7 +29,14 @@ const LoginAndSignup = () => {
       const user = usercredentials.user;
       sessionStorage.setItem("token", user.accessToken);
       sessionStorage.setItem("user", user.email);
-      navigate("/");
+      if (user.email==="anju@gmail.com") {
+         sessionStorage.setItem("admin",user.email)
+         navigate("/")
+      } else{
+        navigate("/");
+      }
+     
+    
     console.log("logged in successfully");
     } catch (error) {
       if (error.message === "Firebase: Error (auth/invalid-credential).") {

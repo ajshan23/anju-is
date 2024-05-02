@@ -20,31 +20,36 @@ import { foods, grocery, medicine } from "./features/productData.js";
 import Cart from "./Pages/Cart.jsx";
 import AddData from "./Pages/AddData.jsx";
 import Restaurant from "./Pages/Restaurant.jsx";
+
+const isAdmin = sessionStorage.getItem("admin")==="anju@gmail.com"
+
+console.log(sessionStorage.getItem("admin"));
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="signup" element={<LoginAndSignup />} />
       <Route path="login" element={<LoginAndSignup />} />
-      <Route path="/" element={<Protected />}>
-        <Route path="/" index element={<Home />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/restaurant" element={<Restaurant />} >
+      {!isAdmin &&<Route path="/" element={<Protected />}>
+        {!isAdmin && <Route path="/" index element={<Home />} />}
+        {!isAdmin && <Route path="/menu" element={<Menu />} />}
+       {!isAdmin && <Route path="/cart" element={<Cart />} />}
+       {!isAdmin && <Route path="/restaurant" element={<Restaurant />} >
           <Route path=":resname" element={<Restaurant/>} />
-        </Route>
-        <Route path="/category" element={<Category/>}>
+        </Route>}
+       {!isAdmin && <Route path="/category" element={<Category/>}>
           <Route
             path=":categoryName"
             element={<Category  />}
           />
-        </Route>
+        </Route>}
 
-        <Route path="/product" element={<Product />}>
+        {!isAdmin&& <Route path="/product" element={<Product />}>
           <Route path=":categoryType/:productId" element={<Product />} />
-        </Route>
+        </Route>}
         <Route path="*" element={<h1>404</h1>} />
-        <Route path="/add" element={<AddData />} />
-      </Route>
+       
+      </Route>}
+      {isAdmin&& <Route path="/add" element={<AddData />} />}
     </Route>
   )
 );

@@ -1,6 +1,7 @@
 import { addDoc, collection } from 'firebase/firestore'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { db } from '../auth/Firebase';
+import { useNavigate } from 'react-router-dom';
 
 const AddData = () => {
     const dbRef = collection(db, "items");
@@ -11,6 +12,7 @@ const AddData = () => {
     const [category,setCategory]=useState("")
     const [price,setPrice]=useState("")
     const [place,setPlace]=useState("")
+    const navigate=useNavigate()
 
     const addData=async()=>{
         try {
@@ -24,10 +26,13 @@ const AddData = () => {
                 place:place,
             }).then(()=>{
                 alert("added successfully")
-                setId(id+1)
+                setId("")
                 setName("")
                 setImage("")
                 setPrice("")
+                setPlace("")
+                setresname("")
+                setCategory("")
             })
 
         } catch (error) {
@@ -36,6 +41,11 @@ const AddData = () => {
               );
         }
     }
+    useEffect(()=>{
+        if (sessionStorage.getItem("admin")!=="anju@gmail.com") {
+            navigate("/login")
+        }
+    })
   return (
     <div className='flex flex-col gap-2 justify-center items-center py-10'>
     <div>id : <input type='number'  className='border-2 border-black outline-none' value={id} onChange={(e)=>setId(e.target.value)}/></div>

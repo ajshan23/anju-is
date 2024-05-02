@@ -11,7 +11,7 @@ const App = () => {
     <div>
       {location.pathname==="/login"||location.pathname==="/signup" ?<></>:<Navbar />}
       <Outlet />
-      {location.pathname==="/login"||location.pathname==="/signup" ?<></>:<Footer />}
+      {location.pathname==="/login"||location.pathname==="/signup" || sessionStorage.getItem("admin") ?<></>:<Footer />}
 
     </div>
   );
