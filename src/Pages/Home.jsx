@@ -9,6 +9,10 @@ const Home = () => {
   const navigate=useNavigate()
   const data=useSelector(state=>state.item)
   useEffect(()=>{
+
+    if (sessionStorage.getItem("admin")) {
+      navigate("/add")
+    }
     if (!sessionStorage.getItem("user")) {
       navigate("/login")
     }
