@@ -12,10 +12,12 @@ const AddData = () => {
     const [category,setCategory]=useState("")
     const [price,setPrice]=useState("")
     const [place,setPlace]=useState("")
+    const [loading,setLoading]=useState(false)
     const navigate=useNavigate()
 
     const addData=async()=>{
         try {
+            setLoading(true)
             await addDoc(dbRef,{
                 id:id,
                 name:name,
@@ -34,11 +36,12 @@ const AddData = () => {
                 setresname("")
                 setCategory("")
             })
-
+            setLoading(false)
         } catch (error) {
             console.log(
                 "error at saving doc at addData ",error
               );
+              setLoading(false)
         }
     }
     useEffect(()=>{
@@ -55,7 +58,7 @@ const AddData = () => {
     <div>category : <input type='text' className='border-2 border-black outline-none' value={category} onChange={(e)=>setCategory(e.target.value)}/></div>
     <div>price : <input type='number' className='border-2 border-black outline-none' value={price} onChange={(e)=>setPrice(e.target.value)}/></div>
     <div>place : <input type='text'  className='border-2 border-black outline-none' value={place} onChange={(e)=>setPlace(e.target.value)}/></div>
-    <div><button className=' px-3 py-1 rounded-md bg-black text-white'onClick={addData} >Add data</button></div>
+    <div><button className=' px-3 py-1 rounded-md bg-black text-white'onClick={addData}disabled={loading} >{loading?"Loading...":"Add data"}</button></div>
 
     </div>
   )
