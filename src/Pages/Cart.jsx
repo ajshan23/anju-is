@@ -20,6 +20,7 @@ const Cart = () => {
   const [phone, setPhone] = useState("");
   const [pincode, setPincode] = useState("");
   const [showTick, setShowTick] = useState(false);
+  const [minus,setMinus]=useState(0)
   // const collectionRef = db.collection("cart");
   const dbRef = collection(db, "cart");
   const cartData=useSelector(state=>state.cart)
@@ -81,7 +82,6 @@ const Cart = () => {
           owner:"owner@gmail.com",
         });
       });
-
       await fetchCart()
     } catch (error) {
       console.log("error at fetching cart in product page", error);
@@ -103,6 +103,7 @@ const Cart = () => {
       navigate("/login")
     }
     dispatch(calculateTotal());
+    setMinus(Number(totalPrice/100*9).toFixed(2))
   }, [change, showTick, loading,handleConfirm]);
 
   if (loading) {
@@ -172,8 +173,12 @@ const Cart = () => {
                 ))}
             </div>
             <div className="flex w-full justify-between pl-10  pr-8 font-bold">
+            <div>delivery charge</div>
+            <div>₹{minus}</div>
+            </div>
+            <div className="flex w-full justify-between pl-10  pr-8 font-bold">
               <div>Total</div>
-              <div>₹{totalPrice}</div>
+              <div>₹{Number(totalPrice)+Number(minus)}</div>
             </div>
             <button
               className="px-24 mt-3 py-2 bg-anju text-white font-lexend font-bold text-xl rounded-lg"

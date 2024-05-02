@@ -46,7 +46,7 @@ const router = createBrowserRouter(
         {!isAdmin&& <Route path="/product" element={<Product />}>
           <Route path=":categoryType/:productId" element={<Product />} />
         </Route>}
-        <Route path="*" element={<h1>404</h1>} />
+        <Route path="*" element={<h1>please refresh and select your function</h1>} />
        
       </Route>}
       {isAdmin&& <Route path="/add" element={<AddData />} />}
