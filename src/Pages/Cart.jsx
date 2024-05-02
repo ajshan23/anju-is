@@ -81,6 +81,7 @@ const Cart = () => {
           owner:"owner@gmail.com",
         });
       });
+
       await fetchCart()
     } catch (error) {
       console.log("error at fetching cart in product page", error);
